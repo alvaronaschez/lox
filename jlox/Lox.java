@@ -1,6 +1,5 @@
 package jlox;
 
-//import jlox.*;
 import jlox.Scanner;
 import jlox.Token;
 

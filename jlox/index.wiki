@@ -1,5 +1,9 @@
 = lox =
 
+== overview ==
+scanning -> parsing -> interpreting
+(scan -> parse -> interpret)
+
 == scanning ==
 
 === lexical grammar ===
@@ -53,6 +57,26 @@ operator		-> "==" | "!=" | "<" | "<=" | ">" | ">="
 === unambiguous context free grammar ===
 
 {{{
+expression 	-> equality
+equality 		-> comparison (( "!=" | "==" ) comparison )* ;
+comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
+term 				-> factor (( "-" | "+" ) factor )* ;
+factor 			-> unary (( "/" | "*" ) unary )* ;
+unary 			-> ("!" | "-")* unary | primary ;
+primary 		-> NUMBER | STRING | "true" | "false" | "nil"
+						| "(" expression ")" ;
+
+}}}
+
+=== gramar (chapter 8) ===
+{{{
+program -> statement* EOF ;
+
+statement -> exprStmt | printStmt ;
+
+exprStmt -> expression ";" ;
+printStmt -> "print" expression ";" ;
+
 expression 	-> equality
 equality 		-> comparison (( "!=" | "==" ) comparison )* ;
 comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
