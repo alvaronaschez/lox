@@ -14,10 +14,9 @@ import re
 keywords = ["and", "class", "else", "false", "for", "fun", "if", "nil", "or",
             "print", "return", "super", "this", "true", "var", "while"]
 
-two_character_tokens = ["==", "!=", "<=", ">="]
-
-one_character_tokens = ["(", ")", "{", "}", ",", ".", "-", "+", ";", "*", "!", "=", "<", ">"]
-one_character_tokens = [re.escape(token) for token in one_character_tokens]
+tokens = ["(", ")", "{", "}", ",", ".", "-", "+", ";", "*", "!", "=", "<", ">"
+            "==", "!=", "<=", ">="]
+tokens = [re.escape(token) for token in tokens]
 
 comments = "(?://.*$)"
 meaningless_characters = r"\s+|\r+|\t+"
@@ -27,7 +26,7 @@ identifier = r"[a-zA-Z_]+[a-zA-Z0-9_]*"
 
 
 pattern = "|".join(
-        keywords + two_character_tokens + one_character_tokens
+        keywords + tokens
         + [comments, meaningless_characters, string_literal, number, identifier])
 
 #regex = re.compile(pattern, re.MULTILINE)
