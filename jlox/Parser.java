@@ -1,10 +1,18 @@
 package jlox;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import static jlox.TokenType.*;
 
 /*
+program -> statement* EOF ;
+
+statement -> exprStmt | printStmt ;
+
+exprStmt -> expression ";" ;
+printStmt -> "print" expression ";" ;
+
 expression 	-> equality
 equality 		-> comparison (( "!=" | "==" ) comparison )* ;
 comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
@@ -23,13 +31,37 @@ class Parser {
 		this.tokens = tokens;
 	}
 
-	Expr parse(){
-		try {
-			return expression();		
-		} catch (ParseError error) {
-			return null;
+	// program -> statement* EOF ;
+	List<Stmt> parse() {
+		List<Stmt> statements = new ArrayList<>();
+		while(!isAtEnd()) {
+			statements.add(statement());
 		}
+		
+		return statements;
 	}
+
+	// statement -> exprStmt | printStmt ;
+	private Stmt statement() {
+		if(match(PRINT))
+			return printStatement();
+		return expressionStatement();
+	}
+
+	// exprStmt -> expression ";" ;
+	private Stmt expressionStatement(){
+		Expr expr = expression();
+		consume(SEMICOLON, "Expect ';' after expression.");
+		return new Stmt.Expression(expr);
+	}
+
+	// printStmt -> "print" expression ";" ;
+	private Stmt printStatement(){
+		Expr expr = expression();
+		consume(SEMICOLON, "Expect ';' after expression.");
+		return new Stmt.Print(expr);
+	}
+
 
 	private boolean match(TokenType ...tokenTypes){
 		for(TokenType type: tokenTypes){

@@ -152,7 +152,11 @@ class Scanner {
 		while(isAlphanumeric(peek()))
 			advance();
 
-		addToken(IDENTIFIER);
+		String text = source.substring(start, current);
+		TokenType type = keywords.get(text);
+		if(type==null)
+			type = IDENTIFIER;
+		addToken(type);
 	}
 
 	private boolean match(char expected) {
