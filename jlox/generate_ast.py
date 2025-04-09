@@ -40,15 +40,17 @@ abstract class {{base_name}} {
 """
 
 types = {
+    "Stmt":{
+        "Expression": ["Expr expression",],
+        "Print": ["Expr expression",],
+        "Var": ["Token name", "Expr expression",],
+    },
     "Expr":{
+        "Variable": ["Token name",],
         "Unary": ["Token operator", "Expr right",],
         "Binary": ["Expr left", "Token operator", "Expr right",],
         "Grouping": ["Expr expression",],
         "Literal": ["Object value",],
-    },
-    "Stmt":{
-        "Expression": ["Expr expression",],
-        "Print": ["Expr expression",],
     },
 }
 

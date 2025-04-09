@@ -5,6 +5,7 @@ import java.util.List;
 abstract class Expr {
 
 	interface Visitor<R> {
+		R visitVariableExpr(Variable expr);
 		R visitUnaryExpr(Unary expr);
 		R visitBinaryExpr(Binary expr);
 		R visitGroupingExpr(Grouping expr);
@@ -12,6 +13,18 @@ abstract class Expr {
 	}
 
 	abstract <R> R accept(Visitor<R> visitor);
+
+	static class Variable extends Expr {
+		final Token name;
+
+		Variable(Token name) {
+			this.name = name;
+		}
+
+		@Override <R> R accept(Visitor<R> visitor) {
+			return visitor.visitVariableExpr(this);
+		}
+	}
 
 	static class Unary extends Expr {
 		final Token operator;
