@@ -43,7 +43,7 @@ types = {
     "Stmt":{
         "Expression": ["Expr expression",],
         "Print": ["Expr expression",],
-        "Var": ["Token name", "Expr expression",],
+        "Var": ["Token name", "Expr initializer",],
     },
     "Expr":{
         "Variable": ["Token name",],

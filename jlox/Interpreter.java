@@ -3,6 +3,8 @@ package jlox;
 import java.util.List;
 
 class Interpreter implements Stmt.Visitor<Void>, Expr.Visitor<Object> {
+	private Environment environment = new Environment();
+	
 	void interpret(List<Stmt> statements){
 		try {
 			for (Stmt statement: statements){
@@ -28,6 +30,21 @@ class Interpreter implements Stmt.Visitor<Void>, Expr.Visitor<Object> {
 		Object value = evaluate(stmt.expression);
 		System.out.println(stringify(value));
 		return null;
+	}
+
+	@Override
+	public Void visitVarStmt(Stmt.Var stmt) {
+		Object value = null;
+		if (stmt.initializer != null)
+			value = evaluate(stmt.initializer);
+
+		environment.define(stmt.name.lexeme, value);
+		return null;
+	}
+
+	@Override
+	public Object visitVariableExpr(Expr.Variable expr) {
+		return environment.get(expr.name);
 	}
 
 	@Override
