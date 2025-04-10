@@ -57,7 +57,7 @@ operator		-> "==" | "!=" | "<" | "<=" | ">" | ">="
 === unambiguous context free grammar ===
 
 {{{
-expression 	-> equality
+expression 	-> equality ;
 equality 		-> comparison (( "!=" | "==" ) comparison )* ;
 comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
 term 				-> factor (( "-" | "+" ) factor )* ;
@@ -77,7 +77,7 @@ statement -> exprStmt | printStmt ;
 exprStmt -> expression ";" ;
 printStmt -> "print" expression ";" ;
 
-expression 	-> equality
+expression 	-> equality ;
 equality 		-> comparison (( "!=" | "==" ) comparison )* ;
 comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
 term 				-> factor (( "-" | "+" ) factor )* ;
@@ -101,7 +101,34 @@ varDecl -> "var" IDENTIFIER ( "=" expression )? ";" ;
 exprStmt -> expression ";" ;
 printStmt -> "print" expression ";" ;
 
-expression 	-> equality
+expression 	-> equality ;
+equality 		-> comparison (( "!=" | "==" ) comparison )* ;
+comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
+term 				-> factor (( "-" | "+" ) factor )* ;
+factor 			-> unary (( "/" | "*" ) unary )* ;
+unary 			-> ("!" | "-")* unary | primary ;
+primary 		-> NUMBER | STRING | "true" | "false" | "nil"
+						| "(" expression ")" | IDENTIFIER;
+
+}}}
+
+
+=== gramar (chapter 8.3) ===
+{{{
+program -> declaration* EOF ;
+
+declaration -> varDecl | statement ;
+
+statement -> exprStmt | printStmt ;
+
+varDecl -> "var" IDENTIFIER ( "=" expression )? ";" ;
+
+exprStmt -> expression ";" ;
+printStmt -> "print" expression ";" ;
+
+expression 	-> assignment ;
+assignment -> IDENTIFIER "=" assignment | equality ;
+
 equality 		-> comparison (( "!=" | "==" ) comparison )* ;
 comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
 term 				-> factor (( "-" | "+" ) factor )* ;

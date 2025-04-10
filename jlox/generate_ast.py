@@ -46,6 +46,7 @@ types = {
         "Var": ["Token name", "Expr initializer",],
     },
     "Expr":{
+        "Assign": ["Token name", "Expr value",],
         "Variable": ["Token name",],
         "Unary": ["Token operator", "Expr right",],
         "Binary": ["Expr left", "Token operator", "Expr right",],
