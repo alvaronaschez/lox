@@ -6,19 +6,22 @@ import java.util.ArrayList;
 import static jlox.TokenType.*;
 
 /* LOX GRAMMAR
-
 program -> declaration* EOF ;
 
 declaration -> varDecl | statement ;
 
-statement -> exprStmt | printStmt ;
+statement -> exprStmt | printStmt | block ;
+
+block -> "{" declarataion* "}" ;
 
 varDecl -> "var" IDENTIFIER ( "=" expression )? ";" ;
 
 exprStmt -> expression ";" ;
 printStmt -> "print" expression ";" ;
 
-expression 	-> equality
+expression 	-> assignment ;
+assignment -> IDENTIFIER "=" assignment | equality ;
+
 equality 		-> comparison (( "!=" | "==" ) comparison )* ;
 comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
 term 				-> factor (( "-" | "+" ) factor )* ;
@@ -59,11 +62,24 @@ class Parser {
 		}
 	}
 
-	// statement -> exprStmt | printStmt ;
+	// statement -> exprStmt | printStmt | block ;
 	private Stmt statement() {
 		if(match(PRINT))
 			return printStatement();
+		if(match(LEFT_BRACE))
+			return new Stmt.Block(block());
 		return expressionStatement();
+	}
+
+	private List<Stmt> block() {
+		List<Stmt> statements = new ArrayList<>();
+
+		while(!check(RIGHT_BRACE) && !isAtEnd()){
+			statements.add(declaration());
+		}
+
+		consume(RIGHT_BRACE, "Expect '}' after block.");
+		return statements;
 	}
 
 	// varDecl -> "var" IDENTIFIER ( "=" expression )? ";" ;

@@ -41,6 +41,7 @@ abstract class {{base_name}} {
 
 types = {
     "Stmt":{
+        "Block": ["List<Stmt> statements",],
         "Expression": ["Expr expression",],
         "Print": ["Expr expression",],
         "Var": ["Token name", "Expr initializer",],
@@ -57,7 +58,6 @@ types = {
 
 rtemplate = Environment(
     loader=BaseLoader,
-    autoescape=select_autoescape(),
     trim_blocks=True,
     lstrip_blocks=True,
     ).from_string(template)

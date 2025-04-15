@@ -2,6 +2,8 @@ build:
 	javac -d out *.java
 run:
 	java -cp out jlox.Lox
+repl:
+	rlwrap java -cp out jlox.Lox
 clean:
 	rm out/*
 gen:
