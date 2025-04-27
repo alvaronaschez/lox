@@ -6,29 +6,36 @@ import java.util.ArrayList;
 import static jlox.TokenType.*;
 
 /* LOX GRAMMAR
-program -> declaration* EOF ;
+{{{
+	program -> declaration* EOF ;
 
-declaration -> varDecl | statement ;
+	declaration -> varDecl | statement ;
 
-statement -> exprStmt | printStmt | block ;
+	statement -> exprStmt 
+							| ifStmt
+												| printStmt
+																	| block ;
 
-block -> "{" declarataion* "}" ;
+	ifStmt -> "if" "(" expression ")" statement  ( "else" statement )? ;
 
-varDecl -> "var" IDENTIFIER ( "=" expression )? ";" ;
+	block -> "{" declarataion* "}" ;
 
-exprStmt -> expression ";" ;
-printStmt -> "print" expression ";" ;
+	varDecl -> "var" IDENTIFIER ( "=" expression )? ";" ;
 
-expression 	-> assignment ;
-assignment -> IDENTIFIER "=" assignment | equality ;
+	exprStmt -> expression ";" ;
+	printStmt -> "print" expression ";" ;
 
-equality 		-> comparison (( "!=" | "==" ) comparison )* ;
-comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
-term 				-> factor (( "-" | "+" ) factor )* ;
-factor 			-> unary (( "/" | "*" ) unary )* ;
-unary 			-> ("!" | "-")* unary | primary ;
-primary 		-> NUMBER | STRING | "true" | "false" | "nil"
-						| "(" expression ")" | IDENTIFIER;
+	expression 	-> assignment ;
+	assignment -> IDENTIFIER "=" assignment | equality ;
+
+	equality 		-> comparison (( "!=" | "==" ) comparison )* ;
+	comparison 	-> term (( ">" | ">=" | "<" | "<=" ) term )* ;
+	term 				-> factor (( "-" | "+" ) factor )* ;
+	factor 			-> unary (( "/" | "*" ) unary )* ;
+	unary 			-> ("!" | "-")* unary | primary ;
+	primary 		-> NUMBER | STRING | "true" | "false" | "nil"
+								| "(" expression ")" | IDENTIFIER;
+}
 */
 class Parser {
 	private static class ParseError extends RuntimeException {};
@@ -64,6 +71,8 @@ class Parser {
 
 	// statement -> exprStmt | printStmt | block ;
 	private Stmt statement() {
+		if(match(IF))
+			return ifStatement();
 		if(match(PRINT))
 			return printStatement();
 		if(match(LEFT_BRACE))
@@ -99,6 +108,19 @@ class Parser {
 		Expr expr = expression();
 		consume(SEMICOLON, "Expect ';' after expression.");
 		return new Stmt.Expression(expr);
+	}
+
+	private Stmt ifStatement(){
+		consume(LEFT_PAREN, "Expect '(' after 'if'.");
+		Expr condition = expression();
+		consume(RIGHT_PAREN, "Expect ')' after if condition.");
+		Stmt thenBranch = statement();
+
+		Stmt elseBranch = null;
+		if(match(ELSE))
+			elseBranch = statement();
+
+		return new Stmt.If(condition, thenBranch, elseBranch);
 	}
 
 	// printStmt -> "print" expression ";" ;

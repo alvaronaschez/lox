@@ -1,8 +1,5 @@
 package jlox;
 
-import jlox.Scanner;
-import jlox.Token;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

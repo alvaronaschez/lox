@@ -1,4 +1,4 @@
-from jinja2 import Environment, BaseLoader, select_autoescape
+from jinja2 import Environment, BaseLoader
 
 template = """\
 package jlox;
@@ -43,6 +43,7 @@ types = {
     "Stmt":{
         "Block": ["List<Stmt> statements",],
         "Expression": ["Expr expression",],
+        "If": ["Expr condition", "Stmt thenBranch", "Stmt elseBranch",],
         "Print": ["Expr expression",],
         "Var": ["Token name", "Expr initializer",],
     },
